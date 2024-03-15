@@ -1,3 +1,38 @@
+# Lab
+## Part 1 - Basic Calculator
+[Part 1 Document](Part1.pdf)
+
+## Part 2 - connectbot application
+method of choice is `propagateConsoleText(char[] rawText, int length)`  
+[Part 2 Document](Part2.pdf)
+```java
+public void propagateConsoleText(char[] rawText, int length) {
+	if (mAccessibilityActive) {
+		synchronized (mAccessibilityLock) {
+			mAccessibilityBuffer.append(rawText, 0, length);
+		}
+        
+		if (mAccessibilityInitialized) {
+			if (mEventSender != null) {
+				removeCallbacks(mEventSender);
+			} else {
+				mEventSender = new AccessibilityEventSender();
+			}
+			postDelayed(mEventSender, ACCESSIBILITY_EVENT_THRESHOLD);
+		}
+	}
+    
+	((Activity) context).runOnUiThread(new Runnable() {
+		@Override
+		public void run() {
+			if (terminalTextViewOverlay != null) {
+				terminalTextViewOverlay.onBufferChanged();
+			}
+		}
+	});
+}
+```
+
 # Soot Tutorial
 [![Build Status](https://travis-ci.com/noidsirius/SootTutorial.svg?branch=master)](https://travis-ci.com/noidsirius/SootTutorial)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/noidsirius/SootTutorial)
